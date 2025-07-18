@@ -1,4 +1,8 @@
 import streamlit as st
+import os
+
+API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
+headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
 st.title("🌍 Trip Planner avec Hugging Face Chatbot")
 
