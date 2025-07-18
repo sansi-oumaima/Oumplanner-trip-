@@ -1,17 +1,24 @@
 import streamlit as st
 import os
+import requests
 
+API_URL = "https://huggingface.co/microsoft/DialoGPT-medium"
 API_TOKEN = os.getenv("HUGGINGFACE_API_TOKEN")
 headers = {"Authorization": f"Bearer {API_TOKEN}"}
 
-st.title("🌍 Trip Planner avec Hugging Face Chatbot")
+def query_huggingface(payload):
+    response = requests.post(API_URL, headers=headers, json=payload)
+    return response.json()
 
-user_input = st.text_input("Pose ta question voyage ici :")
-
-if st.button("Envoyer"):
-    if user_input.strip():
-        with st.spinner("🤖 Génération de la réponse..."):
-            response = get_chatbot_response(user_input)
-        st.markdown(f"**Chatbot** : {response}")
-    else:
-        st.warning("Merci d’entrer une question.")
+def get_chatbot_response(message):
+    payload = {
+        "inputs": {
+            "past_user_inputs": [],
+            "generated_responses": [],
+            "text": message
+        }
+    }
+    output = query_huggingface(payload)
+    if isinstance(output, dict) and output.get("error"):
+        return f"Erreur API : {output['error']}"
+    return output[0]["generated_text"]

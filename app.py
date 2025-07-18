@@ -1,23 +1,15 @@
 import requests
+import streamlit as st
+from planner import get_chatbot_response  # Importer la fonction depuis planner.py
 
-API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill"
-API_TOKEN = "ton_token_ici"  # Remplace par ton token Hugging Face
+st.title("🌍 Trip Planner avec Hugging Face Chatbot")
 
-headers = {"Authorization": f"Bearer {API_TOKEN}"}
+user_input = st.text_input("Pose ta question voyage ici :")
 
-def query_huggingface(payload):
-    response = requests.post(API_URL, headers=headers, json=payload)
-    return response.json()
-
-def get_chatbot_response(message):
-    payload = {
-        "inputs": {
-            "past_user_inputs": [],
-            "generated_responses": [],
-            "text": message
-        }
-    }
-    output = query_huggingface(payload)
-    if isinstance(output, dict) and output.get("error"):
-        return f"Erreur API : {output['error']}"
-    return output[0]["generated_text"]
+if st.button("Envoyer"):
+    if user_input.strip():
+        with st.spinner("🤖 Génération de la réponse..."):
+            response = get_chatbot_response(user_input)
+        st.markdown(f"**Chatbot** : {response}")
+    else:
+        st.warning("Merci d’entrer une question.")
