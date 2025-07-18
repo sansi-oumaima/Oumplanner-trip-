@@ -1,0 +1,4 @@
+# Liste des bibliothèques Python nécessaires
+streamlit
+openai
+python-dotenv
