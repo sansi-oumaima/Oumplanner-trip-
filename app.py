@@ -1,6 +1,7 @@
-import requests
 import streamlit as st
-from planner import get_chatbot_response  # Importer la fonction depuis planner.py
+from planner import get_chatbot_response
+
+st.set_page_config(page_title="Trip Planner Chatbot", page_icon="🌍")
 
 st.title("🌍 Trip Planner avec Hugging Face Chatbot")
 

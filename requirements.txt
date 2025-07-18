@@ -1,8 +1,2 @@
-# Liste des bibliothèques Python nécessaires
 streamlit
-openai
-python-dotenv
-transformers
-torch
 requests
-
