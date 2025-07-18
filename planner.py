@@ -1,8 +1,17 @@
 import os
 from openai import OpenAI
 
-# Obtenir la clé directement depuis l’environnement Streamlit Cloud
-client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
+# ✅ PAS besoin de load_dotenv ici
+# Streamlit injecte déjà les variables d’environnement
+
+# 🔒 Clé API prise directement de l’environnement Streamlit Cloud
+api_key = os.environ.get("OPENAI_API_KEY")
+
+# 💥 Ajoute une vérification pour éviter plantage silencieux
+if not api_key:
+    raise ValueError("La clé OPENAI_API_KEY est introuvable. Vérifie les Secrets sur Streamlit Cloud.")
+
+client = OpenAI(api_key=api_key)
 
 def generate_trip(destination: str, days: int, preferences: str) -> str:
     prompt = f"""
@@ -12,7 +21,7 @@ def generate_trip(destination: str, days: int, preferences: str) -> str:
     """
 
     response = client.chat.completions.create(
-        model="gpt-4",  # ou "gpt-3.5-turbo"
+        model="gpt-4",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
     )
